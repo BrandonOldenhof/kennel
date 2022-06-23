@@ -1,0 +1,49 @@
+name: Sitespeed.io
+
+on:
+  workflow_call:
+
+jobs:
+  sitespeedio-tests:
+    runs-on: ubuntu-latest
+    name: Run Sitespeed.io performance tests
+    steps:
+      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        with:
+          php-version: "8.1"
+      - uses: actions/download-artifact@v2
+        with:
+          name: laravel
+          path: ${{ github.workspace }}
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - name: Install composer dependencies
+        run: composer install -q --no-ansi --no-interaction --no-progress --prefer-dist --ignore-platform-reqs --no-dev
+      - name: Expose Laravel at http://localhost:8000
+        run: php artisan serve --no-reload &
+        env:
+          APP_ENV: ci
+          BASIC_AUTH: false
+          DB_CONNECTION: sqlite
+          DB_DATABASE: '${{ github.workspace }}/database/database.sqlite'
+          DB_FOREIGN_KEYS: true
+          APP_URL: http://localhost:8000
+      - name: running sitespeed.io container with arguments and optional Docker options
+        run: docker run --rm -v "$(pwd):/sitespeed.io" --network=host sitespeedio/sitespeed.io:23.1.0 --verbose --config ./ci/performance/config.json ci/urls.txt
+      - name: test
+        if: always()
+        run: ls -la && ls -la ci && ls -la ci/performance && ci/performance/results
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: sitespeed.io
+          path: |
+            ${{ github.workspace }}/ci/performance/results

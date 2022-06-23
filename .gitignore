@@ -1,0 +1,41 @@
+# Environment-specific files
+.DS_Store
+/node_modules
+/vendor
+.env
+.env.backup
+Homestead.json
+Homestead.yaml
+/supervisord*
+/storage/*.key
+
+# Linter & formatter caches
+.php_cs.cache
+.php-cs-fixer.cache
+/.eslintcache
+/.stylelintcache
+
+# Compiled files
+/public/css
+/public/js
+/public/hot
+/public/storage
+/public/webfonts
+/public/mix-manifest.jso
+
+# Favicons
+/public/favicons
+
+# PHPUnit files
+.phpunit.result.cache
+/reports
+
+# Backup files
+*.zip
+*.sql
+*.gz
+*.tar
+
+# Other
+npm-debug.log
+yarn-error.log

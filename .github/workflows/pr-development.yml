@@ -1,0 +1,29 @@
+name: Development PR workflow
+
+on:
+  pull_request:
+    branches: [development]
+
+env:
+  APP_ENV: ci
+  BASIC_AUTH: false
+  DB_CONNECTION: sqlite
+  DB_DATABASE: "${{ github.workspace }}/database/database.sqlite"
+  DB_FOREIGN_KEYS: true
+  APP_URL: http://localhost:8000
+
+jobs:
+  build-laravel:
+    uses: ./.github/workflows/build-laravel.yml
+
+  phpunit-tests:
+    needs: build-laravel
+    uses: ./.github/workflows/phpunit-tests.yml
+
+  # enlightn-scan:
+  #   needs: build-laravel
+  #   uses: ./.github/workflows/enlightn.yml
+
+concurrency:
+  group: pr-development-${{ github.ref }}-1
+  cancel-in-progress: true

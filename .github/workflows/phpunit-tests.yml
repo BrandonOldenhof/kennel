@@ -1,0 +1,31 @@
+name: PHPUnit tests
+
+on:
+  workflow_call:
+
+jobs:
+  phpunit-tests:
+    name: Run PHPUnit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        with:
+          php-version: "8.1"
+      - uses: actions/download-artifact@v2
+        with:
+          name: laravel
+          path: ${{ github.workspace }}
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - name: Install composer dependencies
+        run: composer install -q --no-ansi --no-interaction --no-progress --prefer-dist --ignore-platform-reqs
+      - name: Execute tests (Unit and Feature tests) via PHPUnit
+        run: php artisan test

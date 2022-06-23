@@ -1,0 +1,48 @@
+// https://aka.ms/devcontainer.json
+{
+  "name": "Existing Docker Compose (Extend)",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "laravel.test",
+  "workspaceFolder": "/var/www/html",
+  "extensions": [
+    // provides Static Application Security Testing (SAST) functionality for detecting vulnerabilities early in the development life cycle
+    "HCLTechnologies.hclappscancodesweep",
+    // Bug and security vulnerabilities scanning
+    "SonarSource.sonarlint-vscode",
+    // JavaScript extension pack
+    "Gydunhn.javascript-essentials",
+    // SASS extension pack
+    "magnobiet.sass-extension-pack",
+    // Laravel extension pack
+    "onecentlin.laravel-extension-pack",
+    // TailwindCSS extension pack
+    "andrewmcodes.tailwindcss-extension-pack",
+    // Basic PHP PSR2 DocBlocking extension
+    "neilbrayfield.php-docblocker",
+    // HTML, CSS, SCSS, JS, TS, JSX, YAML Formatter
+    "esbenp.prettier-vscode",
+    // PHP formatter
+    "junstyle.php-cs-fixer",
+    // JS, TS & JSX Linter
+    "dbaeumer.vscode-eslint",
+    // HTML, CSS & SCSS Linter
+    "stylelint.vscode-stylelint"
+  ],
+  "remoteUser": "sail",
+  // "forwardPorts": [],
+  // "runServices": [],
+  "postCreateCommand": "php artisan key:generate && php artisan migrate:fresh --seed && npm install",
+  "postStartCommand": "npm run watch",
+  "portsAttributes": {
+    "3000": {
+      "label": "Application",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "features": {
+    "git": "os-provided",
+    "github-cli": "latest",
+    "java": "lts"
+  }
+  // "shutdownAction": "none",
+}

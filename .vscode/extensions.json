@@ -1,0 +1,32 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
+  // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
+
+  // List of extensions which should be recommended for users of this workspace.
+  "recommendations": [
+    // provides Static Application Security Testing (SAST) functionality for detecting vulnerabilities early in the development life cycle
+    "HCLTechnologies.hclappscancodesweep",
+    // Bug and security vulnerabilities scanning
+    "SonarSource.sonarlint-vscode",
+    // JavaScript extension pack
+    "Gydunhn.javascript-essentials",
+    // SASS extension pack
+    "magnobiet.sass-extension-pack",
+    // Laravel extension pack
+    "onecentlin.laravel-extension-pack",
+    // TailwindCSS extension pack
+    "andrewmcodes.tailwindcss-extension-pack",
+    // Basic PHP PSR2 DocBlocking extension
+    "neilbrayfield.php-docblocker",
+    // HTML, CSS, SCSS, JS, TS, JSX, YAML Formatter
+    "esbenp.prettier-vscode",
+    // PHP formatter
+    "junstyle.php-cs-fixer",
+    // JS, TS & JSX Linter
+    "dbaeumer.vscode-eslint",
+    // HTML, CSS & SCSS Linter
+    "stylelint.vscode-stylelint"
+  ],
+  // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
+  "unwantedRecommendations": []
+}

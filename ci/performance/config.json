@@ -1,0 +1,16 @@
+{
+  "browsertime": {
+    "iterations": 1,
+    "browser": "chrome",
+    "headless": true
+  },
+  "budget": {
+    "configPath": "./ci/performance/budget.json"
+  },
+  "utc": true,
+  "--outputFolder": "ci/performance/results",
+  "--summary-detail": true,
+  "--video": false,
+  "--visualMetrics": false,
+  "--headless": true
+}

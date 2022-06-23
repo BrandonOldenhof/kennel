@@ -1,0 +1,45 @@
+{
+  // Prettier file formatter
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "html.format.enable": false,
+  "javascript.format.enable": false,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "prettier.htmlWhitespaceSensitivity": "strict",
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "es5",
+  "prettier.endOfLine": "lf",
+  "files.eol": "\n",
+  // Stylelint config
+  "stylelint.enable": true,
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  // PHP
+  "php-cs-fixer.rules": "@PSR2",
+  "php-cs-fixer.onsave": true,
+  "php-cs-fixer.executablePath": "${workspaceFolder}/vendor/bin/php-cs-fixer",
+  "php-cs-fixer.config": ".php-cs-fixer.php",
+  "[php]": {
+    "editor.defaultFormatter": "junstyle.php-cs-fixer",
+    "editor.tabSize": 4
+  },
+  "[html]": {
+    "editor.tabSize": 4
+  },
+  "[blade]": {
+    "editor.tabSize": 4,
+    "editor.defaultFormatter": "shufo.vscode-blade-formatter"
+  },
+  "emmet.includeLanguages": {
+    "javascript": "javascript",
+    "php": "html",
+    "blade": "html"
+  },
+  "editor.formatOnSave": true,
+  "editor.detectIndentation": false,
+  "editor.formatOnPaste": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "jshint.enable": false // We're using ESLint instead of JSHint
+}

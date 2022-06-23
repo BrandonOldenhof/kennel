@@ -1,0 +1,80 @@
+name: Enlightn
+
+on:
+  workflow_call:
+
+jobs:
+  enlightn:
+    runs-on: ubuntu-latest
+    name: Run Enlightn CI tests
+    steps:
+      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        with:
+          php-version: "8.1"
+      - uses: actions/download-artifact@v2
+        with:
+          name: laravel
+          path: ${{ github.workspace }}
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - name: Install composer dependencies
+        run: composer require enlightn/enlightn
+      - name: Expose Laravel at http://localhost:8000
+        run: php artisan serve --no-reload &
+        env:
+          APP_ENV: ci
+          BASIC_AUTH: false
+          DB_CONNECTION: sqlite
+          DB_DATABASE: '${{ github.workspace }}/database/database.sqlite'
+          DB_FOREIGN_KEYS: true
+          APP_URL: http://localhost:8000
+      - name: Set up dummy .env.example
+        run: cp .env.production.example .env.example
+      - name: Run Laravel optimization
+        run: php artisan optimize
+      - name: Run Enlightn
+        id: enlightn
+        env:
+          APP_ENV: production
+          BASIC_AUTH: false
+          DB_CONNECTION: sqlite
+          DB_DATABASE: '${{ github.workspace }}/database/database.sqlite'
+          DB_FOREIGN_KEYS: true
+          APP_URL: http://localhost:8000
+        run: |
+          php artisan enlightn --ci |& tee enlightn.txt
+      - name: Get comment body
+        id: comment-body
+        run: |
+          body="$(cat enlightn.txt |
+            awk '!f && /\+----------------\+-------------\+-------------\+-----------\+-----------\+/ {$0=""; f=1}1' | \
+            awk '!f && /\+----------------\+-------------\+-------------\+-----------\+-----------\+/ {$0="|----------------|-------------|-------------|-----------|-----------|"; f=1}1' | \
+            awk '!f && /\+----------------\+-------------\+-------------\+-----------\+-----------\+/ {$0=""; f=1}1')"
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo "::set-output name=body::$body"
+      - name: Find existing comment
+        uses: peter-evans/find-comment@v1.3.0
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Enlightn result
+      - name: Add comment to PR
+        uses: peter-evans/create-or-update-comment@v1.4.5
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Enlightn result
+            ${{ steps.comment-body.outputs.body }}
+          edit-mode: replace

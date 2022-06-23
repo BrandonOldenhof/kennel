@@ -1,0 +1,23 @@
+name: Clean up workflow run
+
+on:
+  workflow_run:
+    workflows: ["Master PR workflow", "Development PR workflow"]
+    types: [completed]
+
+jobs:
+  on-success:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: geekyeggo/delete-artifact@v1
+        with:
+          name: laravel
+
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - uses: geekyeggo/delete-artifact@v1
+        with:
+          name: laravel

@@ -1,0 +1,8 @@
+# deny everything first
+Order Deny,Allow
+Deny from  all
+
+# then allow selected whitelisted extensions
+<FilesMatch '\.(jpe?g|png|svg)$'>
+  Allow from all
+</FilesMatch>
